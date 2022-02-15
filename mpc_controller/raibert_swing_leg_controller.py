@@ -41,6 +41,16 @@ def _gen_parabola(phase: float, start: float, mid: float, end: float) -> float:
 
   Returns:
     The y value at x == phase.
+  获得一条抛物线上的点 y = a*x^2 + b*x +c
+  抛物线由三个点定义在平面上 (0,起始点) (0.5 中间点) (1 结束点)
+
+  参数:
+    phase 归一化为[0,1]时抛物线x轴上的一点
+    start 定义 x=0 时的y值
+    mid 定义 x=0.5 时的y值
+    end 定义 x=1 时的y值
+  返回:
+    返回在 x=phase 时的y值
   """
   mid_phase = 0.5
   delta_1 = mid - start
@@ -64,6 +74,16 @@ def _gen_swing_foot_trajectory(input_phase: float, start_pos: Sequence[float],
 
   Returns:
     The desired foot position at the current phase.
+  
+  通过抛物线生成摆动相轨迹
+
+  参数:
+    input_phase: 在 [0 1]之间的摆动/站立 相位值
+    start_pos: 摆动周期开始时的足端位置
+    end_pos: 期望落足位置
+
+  返回:
+    在当前相下的期望足端位置
   """
   # We augment the swing speed using the below formula. For the first half of
   # the swing cycle, the swing leg moves faster and finishes 80% of the full
@@ -177,6 +197,9 @@ class RaibertSwingLegController(leg_controller.LegController):
       # For now we did not consider the body pitch/roll and all calculation is
       # in the body frame. TODO(b/143378213): Calculate the foot_target_position
       # in world frame and then project back to calculate the joint angles.
+      """
+      在所有计算中都没有考虑身体姿态的pitch和roll,计算世界坐标系中的期望足端位置,投影回去映射到关节角
+      """
       hip_offset = hip_positions[leg_id]
       twisting_vector = np.array((-hip_offset[1], hip_offset[0], 0))
       hip_horizontal_velocity = com_velocity + yaw_dot * twisting_vector
@@ -197,6 +220,7 @@ class RaibertSwingLegController(leg_controller.LegController):
           self._robot.ComputeMotorAnglesFromFootLocalPosition(
               leg_id, foot_position))
       # Update the stored joint angles as needed.
+      # 根据需要存储关节角度
       for joint_id, joint_angle in zip(joint_ids, joint_angles):
         self._joint_angles[joint_id] = (joint_angle, leg_id)
 

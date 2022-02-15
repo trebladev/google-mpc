@@ -83,14 +83,19 @@ _INIT_LEG_STATE = (
 
 def _generate_example_linear_angular_speed(t):
   """Creates an example speed profile based on time for demo purpose."""
-  vx = 0.6 * robot_sim.MPC_VELOCITY_MULTIPLIER
-  vy = 0.2 * robot_sim.MPC_VELOCITY_MULTIPLIER
-  wz = 0.8 * robot_sim.MPC_VELOCITY_MULTIPLIER
+  vx = 0.5 * robot_sim.MPC_VELOCITY_MULTIPLIER
+  vy = 0.0 * robot_sim.MPC_VELOCITY_MULTIPLIER
+  wz = 0.0 * robot_sim.MPC_VELOCITY_MULTIPLIER
   
   time_points = (0, 5, 10, 15, 20, 25,30)
+  """
   speed_points = ((0, 0, 0, 0), (0, 0, 0, wz), (vx, 0, 0, 0), (0, 0, 0, -wz), (0, -vy, 0, 0),
                   (0, 0, 0, 0), (0, 0, 0, wz))
+  """
+  speed_points = ((vx, 0, 0, 0), (vx, 0, 0, 0), (vx, 0, 0, 0), (vx, 0, 0, 0), (vx, 0, 0, 0),
+                  (vx, 0, 0, 0), (vx, 0, 0, 0))
 
+  """
   speed = scipy.interpolate.interp1d(
       time_points,
       speed_points,
@@ -98,6 +103,8 @@ def _generate_example_linear_angular_speed(t):
       fill_value="extrapolate",
       axis=0)(
           t)
+  """
+  speed = (0,0,0,0)
 
   return speed[0:3], speed[3]
 

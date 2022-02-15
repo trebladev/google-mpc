@@ -186,5 +186,5 @@ class OpenloopGaitGenerator(gait_generator.GaitGenerator):
         self._leg_state[leg_id] = gait_generator.LegState.EARLY_CONTACT
       if (self._leg_state[leg_id] == gait_generator.LegState.STANCE
           and not contact_state[leg_id]):
-        logging.info("lost contact detected.")
+        logging.info("lost %d contact detected.",leg_id)
         self._leg_state[leg_id] = gait_generator.LegState.LOSE_CONTACT
